@@ -1,5 +1,5 @@
 defaultProject: astute-curve-460413-b1
 defaultLocation: US
-defaultDataset: dataform
+defaultDataset: ga4_ecommerce
 defaultAssertionDataset: dataform_assertions
 dataformCoreVersion: 3.0.0

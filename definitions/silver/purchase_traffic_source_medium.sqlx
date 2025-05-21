@@ -1,8 +1,6 @@
 config {
     type: "table",
-    /* Materialized as a table for performance and reliability */
-    schema: "dataform",
-    /* Uses defaultDataset from dataform.yaml */
+    schema: "ga4_ecommerce",
     name: "purchase_traffic_source_medium",
     tags: ["silver"],
     description: "Filters purchases only from GA4 events, removes deleted data, and extracts traffic source medium details."
@@ -22,20 +20,9 @@ SELECT
   event_value_in_usd,
   items.quantity as items_quantity
 FROM
-  ${ref("ga4_events")},
+  ${ref("events_*")},
   UNNEST(items) AS items
-  /* Referencing the public GA4 dataset with wildcard */
 WHERE
-  event_name = 'purchase'
-  AND traffic_source.medium IS NOT NULL
-  AND traffic_source.medium != '(data deleted)'
-  AND event_date IS NOT NULL
-  AND user_pseudo_id IS NOT NULL
-  AND (
-  SELECT
-    ep.value.int_value
-  FROM
-    UNNEST(event_params) AS ep
-  WHERE
-    ep.key = 'ga_session_id') IS NOT NULL
-  AND event_value_in_usd IS NOT NULL
+  event_name = 'purchase'   /* Filters purchases only */
+  AND traffic_source.medium != '(data deleted)' /* Remove rows
+containing deleted data */ 
