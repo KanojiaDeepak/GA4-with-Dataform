@@ -1,0 +1,6 @@
+config {
+  type: "declaration",
+  database: "bigquery-public-data",
+  schema: "ga4_obfuscated_sample_ecommerce",
+  name: "events_*", /* Example, Dataform will use wildcards. You might declare specific dates if needed, or rely on wildcard in downstream queries. For this exercise, we declare one table to show the concept.*/
+}
