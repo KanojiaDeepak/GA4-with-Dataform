@@ -1,0 +1,10 @@
+config {
+  type: "table", 
+  schema: "dataform",
+  tags: ["bronze"]
+}
+
+SELECT
+  *
+FROM
+  `bigquery-public-data.ga4_obfuscated_sample_ecommerce.events_*`

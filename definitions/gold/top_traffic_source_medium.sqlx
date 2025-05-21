@@ -1,0 +1,21 @@
+config {
+  type: "table", /* Materialized as a table for business reporting */
+  schema: "dataform", /* Uses defaultDataset from dataform.yaml */
+  name: "top_traffic_source_medium",
+  tags: ["gold"],
+  description: "Monthly aggregated report analyzing top traffic sources by purchase value and volume."
+}
+
+SELECT
+  FORMAT_DATE('%Y-%m', event_date) AS month, /* Monthly aggregation */
+  traffic_source_medium,
+  SUM(event_value_in_usd) AS total_purchased_value_usd,
+  COUNT(DISTINCT CONCAT(user_pseudo_id, ga_session_id, event_date)) AS total_purchases, /* Count of unique purchases */
+  SUM(items_quantity) AS total_items_purchased, /* Assuming 'items' is an array in event_params and quantity exists */
+  SAFE_DIVIDE(SUM(items_quantity), COUNT(DISTINCT CONCAT(user_pseudo_id, ga_session_id, event_date))) AS avg_items_per_purchase /* Average items per purchase */
+FROM
+  ${ref("purchase_traffic_source_medium")}
+GROUP BY
+  1, 2
+ORDER BY
+  month DESC, total_purchased_value_usd DESC
