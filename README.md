@@ -40,6 +40,12 @@ We're analyzing purchase behavior from the public GA4 e-commerce dataset, focusi
 
 ---
 
+## Data Lineage
+Below is a visual representation of the data flow within this Dataform project, showing dependencies from source declarations to final reports.
+
+![Dataform Lineage Graph](dataform_lineage_graph.png)
+
+
 ## Persistence
 
 All Silver and Gold layer outputs are created as **BigQuery tables**. This ensures data persists after each run, making it ready for queries and dashboards. The `type: "table"` configuration is ideal for our regular workflow, refreshing the data each time.
