@@ -36,11 +36,20 @@ We're analyzing purchase behavior from the public GA4 e-commerce dataset, focusi
     * `avg_items_per_purchase`
 * **File:** `definitions/gold/top_traffic_source_medium.sqlx`
 
+* Note that `traffic_source_medium` may contain values like `(none)` and `<Other>`, which represent untagged or categorized traffic respectively. **Currently, these values are passed through as-is, but they can be transformed (e.g., mapped to 'Direct' or 'Uncategorized') for cleaner reporting or specific business definitions.**
+
 ---
 
 ## Persistence
 
 All Silver and Gold layer outputs are created as **BigQuery tables**. This ensures data persists after each run, making it ready for queries and dashboards. The `type: "table"` configuration is ideal for our regular workflow, refreshing the data each time.
+
+**Suggestions for large-scale data:**
+If the source data is expected to grow significantly and become very large, consider these optimizations:
+
+* **Incremental Tables (`type: "incremental"`):** For tables where you only need to process new data (e.g., daily events), switching to `type: "incremental"` can drastically reduce processing time and cost by only appending new records instead of rebuilding the entire table.
+* **Partitioning:** Partition your BigQuery tables (e.g., by `event_date`) to improve query performance and reduce scan costs. Queries can then efficiently target specific date ranges.
+* **Clustering:** Apply clustering on frequently filtered or joined columns (e.g., `traffic_source_medium`, `user_pseudo_id`) to further optimize query execution by co-locating related data.
 
 ---
 
