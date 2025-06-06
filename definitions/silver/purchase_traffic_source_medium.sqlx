@@ -18,11 +18,16 @@ SELECT
   WHERE
     ep.key = 'ga_session_id') AS ga_session_id,
   event_value_in_usd,
-  items.quantity as items_quantity
+  (
+  SELECT
+    SUM(item.quantity)
+  FROM
+    UNNEST(items) AS item) AS items_quantity
 FROM
-  ${ref("events_*")},
-  UNNEST(items) AS items
+  ${ref("events_*")}
 WHERE
-  event_name = 'purchase'   /* Filters purchases only */
-  AND traffic_source.medium != '(data deleted)' /* Remove rows
-containing deleted data */ 
+  event_name = 'purchase'
+  /* Filters purchases only */
+  AND traffic_source.medium != '(data deleted)'
+  /* Remove rows
+  containing deleted data */
